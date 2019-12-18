@@ -1,0 +1,5 @@
+cd("C:/Users/Dominik/Desktop/PWiR/x_ProjektMyjnia").
+c(carWashMutex).
+c(carDriver).
+carWashMutex:startCarWash().
+carDriver:getNewCarToWash().
