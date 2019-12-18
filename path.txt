@@ -1,5 +1,7 @@
-cd("C:/Users/Dominik/Desktop/PWiR/x_ProjektMyjnia").
+cd("C:/Users/your path here").
 c(carWashMutex).
 c(carDriver).
+c(myTimer).
 carWashMutex:startCarWash().
-carDriver:getNewCarToWash().
+myTimer:createTimer().
+carDriver:getNewCarsToWash().

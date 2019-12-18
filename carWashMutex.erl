@@ -4,10 +4,10 @@
 
 % register and start carWashMutex
 startCarWash() -> 
-    io:format("Starting car wash !~n"),
+    io:format("CAR-WASH Starting car wash ~n"),
     Pid = spawn(?MODULE, init, []),
     register(carWashMutex, Pid).
-
+	
 
 % carWash closing ----------------------------------------- //
 closeCarWash() -> 
@@ -23,7 +23,8 @@ init() ->
 free() -> 
     receive
         {request, Pid} ->   % give driver access to car wash
-            Pid ! ok,       % send back approval
+            io:format("CAR-WASH Car with ~p got a car wash. ~n", [Pid]),
+			Pid ! ok,       % send back approval
             busy(Pid);      % car wash is busy now...
         close -> 
             close()         % close car wash
@@ -32,9 +33,22 @@ free() ->
 % car is currently in car wash and the car wash
 % waits for the car to leave 
 busy(Pid) -> 
+	io:format("CAR-WASH MY PID IS ~p. ~n", [self()]),
     receive 
         {leave, Pid} -> 
-            free()
+            free();
+		startWashingMachine ->
+			io:format("CAR-WASH Car with ~p started timer. ~n", [Pid]),
+			startTimer(),
+			busy(Pid);
+		endWashingMachine ->
+			io:format("CAR-WASH Car with ~p ended timer. ~n", [Pid]),
+			endTimer(),
+			busy(Pid);
+		{timestamp, Val} -> 
+			io:format("CAR-WASH Timer sent me value ~p. ~n", [Val]),
+			Pid ! {price, Val*2},
+			busy(Pid)
     end.
 
 % close car wash
@@ -46,3 +60,9 @@ close() ->
 		after
 			0 -> ok
     end.
+	
+startTimer() ->
+	timer ! start.      
+	
+endTimer() -> 
+	timer ! finish.

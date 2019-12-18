@@ -5,7 +5,7 @@
 
 % Set up timer
 createTimer() -> 
-    io:format("TIMER creating timer ~n"),
+    % io:format("TIMER creating timer ~n"),
     Pid = spawn(?MODULE, initTimer, []),
     register(timer, Pid).
 	
@@ -15,10 +15,10 @@ initTimer() ->
 startListening(StartTime) ->
 	receive
 		start ->
-		    io:format("TIMER started... ~n"),
+		    % io:format("TIMER started... ~n"),
 			startListening(os:system_time());
 		finish ->
-			io:format("TIMER finished... ~n"),
+			% io:format("TIMER finished... ~n"),
 			carWashMutex ! {timestamp, (os:system_time()-StartTime)/1000},
 			startListening(0)	
     end.
